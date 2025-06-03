@@ -53,14 +53,14 @@ Join the Blinky revolution on Solana! Mint your unique NFT and dive into our vib
 
 _Powered by Blinky NFT Bot 🤖_`,
   `🚀 *Blinky NFTs are LIVE!*  
-Don’t miss out on owning a piece of the Blinky universe. Mint now and trade on Jupiter!  
+Only 500 will ever be minted. Each Blinky OG VIP NFT offers real utility, passive LP rewards, exclusive VIP perks and more!  
 
 🌐 *Mint yours:* [nft.blinkyonsol.com](https://nft.blinkyonsol.com)  
 🌍 *Visit us:* [blinkyonsol.com](https://blinkyonsol.com)  
 
 _Powered by Blinky NFT Bot 🤖_`,
   `💎 *Blinky NFTs Await!*  
-Only 500 will ever be minted. Each Blinky OG VIP NFT offers real utility, passive LP rewards, exclusive VIP perks and more! 
+Get your Blinky OG VIP NFT Now!
 
 🌐 *Mint yours:* [nft.blinkyonsol.com](https://nft.blinkyonsol.com)  
 🌍 *Visit us:* [blinkyonsol.com](https://blinkyonsol.com)  
