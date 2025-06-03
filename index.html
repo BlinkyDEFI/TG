@@ -108,6 +108,7 @@ async function sendRandomPromo() {
           ]
         }
       });
+      console.log(`✅ Fallback text message sent to ${chatId}`);
     }
   }
 }
@@ -120,14 +121,18 @@ function schedulePromos() {
 
   const scheduleNext = () => {
     const interval = getRandomInterval();
+    console.log(`📅 Next promo scheduled in ${Math.round(interval / (60 * 60 * 1000) * 100) / 100} hours`);
     setTimeout(async () => {
       await sendRandomPromo();
       scheduleNext(); // Schedule the next message
     }, interval);
-    console.log(`📅 Next promo scheduled in ${interval / (60 * 60 * 1000)} hours`);
   };
 
-  scheduleNext(); // Start the scheduling
+  // Send initial message immediately
+  console.log('📢 Sending initial promotional message...');
+  sendRandomPromo().then(() => {
+    scheduleNext(); // Start scheduling after initial message
+  });
 }
 
 // Keep-alive function
