@@ -1,26 +1,153 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>blinky-bot-alerts</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+import TelegramBot from 'node-telegram-bot-api';
+import express from 'express';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+import axios from 'axios';
 
-    <meta property="og:title" content="blinky-bot-alerts" />
-    <meta property="og:description" content="Lovable Generated Project" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+dotenv.config();
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: false });
+const chatIds = process.env.TELEGRAM_CHAT_IDS?.split(',').map(id => id.trim()) || [];
+const app = express();
 
-  <body>
-    <div id="root"></div>
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+app.use(bodyParser.json());
+
+// Telegram webhook endpoint
+app.post(`/bot${process.env.TELEGRAM_BOT_TOKEN}`, (req, res) => {
+  try {
+    bot.processUpdate(req.body);
+    res.sendStatus(200);
+  } catch (error) {
+    console.error('❌ Telegram webhook error:', error.message);
+    res.status(500).send('Error processing Telegram webhook');
+  }
+});
+
+// Telegram commands
+bot.onText(/\/start/, (msg) => {
+  bot.sendMessage(msg.chat.id, `🤖 Blinky NFT Bot is active!\n\n🌐 Visit: [nft.blinkyonsol.com](https://nft.blinkyonsol.com)`, {
+    parse_mode: 'Markdown'
+  });
+});
+
+bot.onText(/\/status/, (msg) => {
+  const isMonitored = chatIds.includes(msg.chat.id.toString());
+  const status = isMonitored ? '✅ Active' : '❌ Not monitored';
+  bot.sendMessage(msg.chat.id, `📊 Bot Status: ${status}\n📢 Monitoring ${chatIds.length} groups`, {
+    parse_mode: 'Markdown'
+  });
+});
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).send('Bot is running');
+});
+
+// Array of promotional messages
+const promoMessages = [
+  `🎉 *Get Your Blinky NFT Now!*  
+Join the Blinky revolution on Solana! Mint your unique NFT and dive into our vibrant community.  
+
+🌐 *Mint yours:* [nft.blinkyonsol.com](https://nft.blinkyonsol.com)  
+🌍 *Visit us:* [blinkyonsol.com](https://blinkyonsol.com)  
+
+_Powered by Blinky NFT Bot 🤖_`,
+  `🚀 *Blinky NFTs are LIVE!*  
+Don’t miss out on owning a piece of the Blinky universe. Mint now and trade on Jupiter!  
+
+🌐 *Mint yours:* [nft.blinkyonsol.com](https://nft.blinkyonsol.com)  
+🌍 *Visit us:* [blinkyonsol.com](https://blinkyonsol.com)  
+
+_Powered by Blinky NFT Bot 🤖_`,
+  `💎 *Blinky NFTs Await!*  
+Be part of the Solana NFT craze with Blinky. Mint today and join the fun!  
+
+🌐 *Mint yours:* [nft.blinkyonsol.com](https://nft.blinkyonsol.com)  
+🌍 *Visit us:* [blinkyonsol.com](https://blinkyonsol.com)  
+
+_Powered by Blinky NFT Bot 🤖_`
+];
+
+// Function to send random promotional message
+async function sendRandomPromo() {
+  const videoUrl = process.env.CELEBRATION_VIDEO_URL || 'https://gateway.irys.xyz/NGY5Uo_lDb4F4PBHoMN8WsYwh0A6n7FMElVJh6P9mL4?ext=mp4';
+  const message = promoMessages[Math.floor(Math.random() * promoMessages.length)];
+
+  for (const chatId of chatIds) {
+    try {
+      await bot.sendVideo(chatId, videoUrl, {
+        caption: message,
+        parse_mode: 'Markdown',
+        reply_markup: {
+          inline_keyboard: [
+            [
+              { text: '🛒 Mint Now', url: 'https://nft.blinkyonsol.com' },
+              { text: '🌐 Website', url: 'https://blinkyonsol.com' }
+            ],
+            [
+              { text: '💰 Buy Blinky', url: 'https://jup.ag/swap/SOL-B4fuA7wKBagyR1V5BBAhGJu7z2cD16rubZ5HPUNcpump' }
+            ]
+          ]
+        }
+      });
+      console.log(`✅ Promotional message sent to ${chatId}`);
+    } catch (error) {
+      console.error('❌ Error sending promotional message to', chatId, ':', error.message);
+      // Fallback to text message if video fails
+      await bot.sendMessage(chatId, message, {
+        parse_mode: 'Markdown',
+        reply_markup: {
+          inline_keyboard: [
+            [
+              { text: '🛒 Mint Now', url: 'https://nft.blinkyonsol.com' },
+              { text: '🌐 Website', url: 'https://blinkyonsol.com' }
+            ],
+            [
+              { text: '💰 Buy Blinky', url: 'https://jup.ag/swap/SOL-B4fuA7wKBagyR1V5BBAhGJu7z2cD16rubZ5HPUNcpump' }
+            ]
+          ]
+        }
+      });
+    }
+  }
+}
+
+// Schedule promotional messages (3–5 times a day)
+function schedulePromos() {
+  const minInterval = 4 * 60 * 60 * 1000; // 4 hours
+  const maxInterval = 8 * 60 * 60 * 1000; // 8 hours
+  const getRandomInterval = () => Math.floor(Math.random() * (maxInterval - minInterval + 1)) + minInterval;
+
+  const scheduleNext = () => {
+    const interval = getRandomInterval();
+    setTimeout(async () => {
+      await sendRandomPromo();
+      scheduleNext(); // Schedule the next message
+    }, interval);
+    console.log(`📅 Next promo scheduled in ${interval / (60 * 60 * 1000)} hours`);
+  };
+
+  scheduleNext(); // Start the scheduling
+}
+
+// Keep-alive function
+async function keepAlive() {
+  try {
+    await axios.get('https://tgbot-1-680u.onrender.com/health');
+    console.log('✅ Keep-alive ping sent');
+  } catch (error) {
+    console.error('❌ Keep-alive ping failed:', error.message);
+  }
+}
+
+// Schedule keep-alive every 10 minutes
+setInterval(keepAlive, 10 * 60 * 1000);
+
+// Start Express server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🤖 Blinky NFT Bot started on port ${PORT}!`);
+  console.log(`📢 Monitoring ${chatIds.length} groups`);
+  keepAlive(); // Initial ping
+  schedulePromos(); // Start promotional message scheduling
+});
