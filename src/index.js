@@ -46,6 +46,7 @@ app.get('/health', (req, res) => {
 // Array of promotional messages (only the new message)
 const promoMessages = [
   `💎 Blinky NFTs are LIVE!  💎  
+
 Only 500 will ever be minted. Each Blinky OG VIP NFT offers real utility, passive LP rewards, exclusive VIP perks and more!  
 
 🌐 *Mint yours:* [nft.blinkyonsol.com](https://nft.blinkyonsol.com)  
