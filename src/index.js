@@ -60,7 +60,7 @@ Don’t miss out on owning a piece of the Blinky universe. Mint now and trade on
 
 _Powered by Blinky NFT Bot 🤖_`,
   `💎 *Blinky NFTs Await!*  
-Be part of the Solana NFT craze with Blinky. Mint today and join the fun!  
+Only 500 will ever be minted. Each Blinky OG VIP NFT offers real utility, passive LP rewards, exclusive VIP perks and more! 
 
 🌐 *Mint yours:* [nft.blinkyonsol.com](https://nft.blinkyonsol.com)  
 🌍 *Visit us:* [blinkyonsol.com](https://blinkyonsol.com)  
