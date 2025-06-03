@@ -25,7 +25,7 @@ app.post(`/bot${process.env.TELEGRAM_BOT_TOKEN}`, (req, res) => {
 
 // Telegram commands
 bot.onText(/\/start/, (msg) => {
-  bot.sendMessage(msg.chat.id, `🤖 Blinky NFT Bot is active!\n\n🌐 Visit: [nft.blinkyonsol.com](https://nft.blinkyonsol.com)`, {
+  bot.sendMessage(msg.chat.id, `🤖 Blinky NFT Bot is active!\n\n🌐 Mint Now: [nft.blinkyonsol.com](https://nft.blinkyonsol.com)`, {
     parse_mode: 'Markdown'
   });
 });
@@ -43,24 +43,10 @@ app.get('/health', (req, res) => {
   res.status(200).send('Bot is running');
 });
 
-// Array of promotional messages
+// Array of promotional messages (only the new message)
 const promoMessages = [
-  `🎉 *Get Your Blinky NFT Now!*  
-Join the Blinky revolution on Solana! Mint your unique NFT and dive into our vibrant community.  
-
-🌐 *Mint yours:* [nft.blinkyonsol.com](https://nft.blinkyonsol.com)  
-🌍 *Visit us:* [blinkyonsol.com](https://blinkyonsol.com)  
-
-_Powered by Blinky NFT Bot 🤖_`,
-  `🚀 *Blinky NFTs are LIVE!*  
+  `💎 Blinky NFTs are LIVE!  💎  
 Only 500 will ever be minted. Each Blinky OG VIP NFT offers real utility, passive LP rewards, exclusive VIP perks and more!  
-
-🌐 *Mint yours:* [nft.blinkyonsol.com](https://nft.blinkyonsol.com)  
-🌍 *Visit us:* [blinkyonsol.com](https://blinkyonsol.com)  
-
-_Powered by Blinky NFT Bot 🤖_`,
-  `💎 *Blinky NFTs Await!*  
-Get your Blinky OG VIP NFT Now!
 
 🌐 *Mint yours:* [nft.blinkyonsol.com](https://nft.blinkyonsol.com)  
 🌍 *Visit us:* [blinkyonsol.com](https://blinkyonsol.com)  
@@ -70,10 +56,13 @@ _Powered by Blinky NFT Bot 🤖_`
 
 // Function to send random promotional message
 async function sendRandomPromo() {
+  console.log('DEBUG: Starting sendRandomPromo, chatIds:', chatIds);
   const videoUrl = process.env.CELEBRATION_VIDEO_URL || 'https://gateway.irys.xyz/NGY5Uo_lDb4F4PBHoMN8WsYwh0A6n7FMElVJh6P9mL4?ext=mp4';
-  const message = promoMessages[Math.floor(Math.random() * promoMessages.length)];
+  const message = promoMessages[0]; // Use the only message
+  console.log('DEBUG: Selected message:', message);
 
   for (const chatId of chatIds) {
+    console.log('DEBUG: Sending to chatId:', chatId);
     try {
       await bot.sendVideo(chatId, videoUrl, {
         caption: message,
@@ -83,9 +72,6 @@ async function sendRandomPromo() {
             [
               { text: '🛒 Mint Now', url: 'https://nft.blinkyonsol.com' },
               { text: '🌐 Website', url: 'https://blinkyonsol.com' }
-            ],
-            [
-              { text: '💰 Buy Blinky', url: 'https://jup.ag/swap/SOL-B4fuA7wKBagyR1V5BBAhGJu7z2cD16rubZ5HPUNcpump' }
             ]
           ]
         }
@@ -101,9 +87,6 @@ async function sendRandomPromo() {
             [
               { text: '🛒 Mint Now', url: 'https://nft.blinkyonsol.com' },
               { text: '🌐 Website', url: 'https://blinkyonsol.com' }
-            ],
-            [
-              { text: '💰 Buy Blinky', url: 'https://jup.ag/swap/SOL-B4fuA7wKBagyR1V5BBAhGJu7z2cD16rubZ5HPUNcpump' }
             ]
           ]
         }
@@ -145,8 +128,8 @@ async function keepAlive() {
   }
 }
 
-// Schedule keep-alive every 10 minutes
-setInterval(keepAlive, 10 * 60 * 1000);
+// Schedule keep-alive every 4 minutes
+setInterval(keepAlive, 4 * 60 * 1000);
 
 // Start Express server
 const PORT = process.env.PORT || 3000;
