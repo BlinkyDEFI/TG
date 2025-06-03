@@ -72,6 +72,9 @@ async function sendRandomPromo() {
             [
               { text: '🛒 Mint Now', url: 'https://nft.blinkyonsol.com' },
               { text: '🌐 Website', url: 'https://blinkyonsol.com' }
+            ],
+            [
+              { text: '💰 Buy Blinky', url: 'https://jup.ag/swap/SOL-B4fuA7wKBagyR1V5BBAhGJu7z2cD16rubZ5HPUNcpump' }
             ]
           ]
         }
@@ -87,6 +90,9 @@ async function sendRandomPromo() {
             [
               { text: '🛒 Mint Now', url: 'https://nft.blinkyonsol.com' },
               { text: '🌐 Website', url: 'https://blinkyonsol.com' }
+            ],
+            [
+              { text: '💰 Buy Blinky', url: 'https://jup.ag/swap/SOL-B4fuA7wKBagyR1V5BBAhGJu7z2cD16rubZ5HPUNcpump' }
             ]
           ]
         }
